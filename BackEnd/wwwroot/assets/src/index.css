@@ -1,0 +1,207 @@
+body, .layout {
+   background: #333f4f
+}
+.layout {
+    margin-top: 5px;
+}
+.header {
+    text-align: center;
+    padding: 60px 0;
+}
+.content {
+    text-align: center;
+    background: #fff;
+    padding: 10px;
+    padding-bottom: -10px;
+}
+.footer {
+}
+
+/*HEADER*/
+.logo {
+}
+
+/*CONTENT*/
+.form-title {
+    color: #32c5d2;
+    font-size: 28px;
+    font-weight: 400;
+    font-family: "Open Sans", sans-serif;
+    margin-bottom: 25px;
+    margin-top: 15px;
+}
+.form-login {
+    text-align: center;
+    margin: 25px;
+    margin-bottom: -25px;
+}
+.login-form {
+    max-width: 400px;
+    margin-bottom: -35px;
+    
+  }
+  li {
+    list-style-type: none;
+   }
+ .login-form-forgot {
+    float: right;
+    font-size: 14px;
+    font-family: "Open Sans",sans-serif;
+  }
+  .ul-error {
+    margin-left: -11px;
+  }
+  .display-error {
+    border-width: 1px;
+    background-color: #fbe1e3;
+    border-color: #fbe1e3;
+    color: #e73d4a;
+    text-align: left;
+  }
+  .form-error {
+      margin-bottom: -10px;
+  }
+  .form-error-login {
+    margin-bottom: 0px;
+}
+ .login-form-button {
+    float: left;
+    color: #fff;
+    background-color: #32c5d2;
+    border-color: #32c5d2;
+    border-top-color: rgb(50, 197, 210);
+    border-right-color: rgb(50, 197, 210);
+    border-bottom-color: rgb(50, 197, 210);
+    border-left-color: rgb(50, 197, 210);
+    font-weight: 600;
+    height: 40px;
+    width: 30%;
+
+  }
+  .uppercase {
+      text-transform: uppercase;
+  }
+  .input-style .ant-input {
+      background-color: #dde3ec;
+      color: #8290a3;
+  }
+  .ant-form-explain {
+      float: left;
+  }
+  .remember-password {
+    color: #8290a3;
+    font-size: 14px;
+    font-family: "Open Sans",sans-serif;
+  }
+  .form-actions {
+    clear: both;
+    border: 0;
+    border-bottom: 1px solid #eee;
+    padding: 25px 30px;
+    margin-left: -30px;
+    margin-right: -30px;
+  }
+
+.form-social {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+.register-form {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    background-color: #6c7a8d;
+    margin-left: -35px;
+    margin-right: -35px;
+}
+.link-registr {
+    font-weight: 600;
+    font-size: 14px;
+    color: #c3cedd;
+}
+.text {
+    text-align: justify;
+    color: #999;
+}
+
+.back-form-button {
+    float: left;
+    color: #32c5d2;
+    background: 0 0;
+    border-color: #32c5d2;
+    border-top-color: rgb(50, 197, 210);
+    border-right-color: rgb(50, 197, 210);
+    border-bottom-color: rgb(50, 197, 210);
+    border-left-color: rgb(50, 197, 210);
+    font-weight: 600;
+    height: 40px;
+    width: 30%;
+    overflow: hidden;
+  }
+.facebook-login {
+    color: #fff;
+    text-decoration: none;
+}
+.forgot-form-button {
+    float: right;
+    color: #fff;
+    background-color: #36c6d3;
+    border-color: #2bb8c4;
+    border-top-color: rgb(43, 184, 196);
+    border-right-color: rgb(43, 184, 196);
+    border-bottom-color: rgb(43, 184, 196);
+    border-left-color: rgb(43, 184, 196);
+    font-weight: 600;
+    height: 40px;
+    width: 30%;
+    overflow: hidden;
+  }
+  .form-forget {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .form-actions-forgot {
+    clear: both;
+    border: 0;
+    border-bottom: none;
+    padding: 25px 30px;
+    margin-left: -30px;
+    margin-right: -30px;
+  }
+
+  .ant-select-selection {
+    background-color: #dde3ec;
+    color: #8290a3;
+  }
+  .agree-term {
+    float: left;
+    color: #8290a3;
+    font-size: 14px;
+    font-family: "Open Sans",sans-serif;
+    text-align: left;
+  }
+  .account-details {
+    margin-bottom: -5px;
+  }
+  .account-details-top {
+    margin-bottom: -10px;
+    margin-top: -15px;
+  }
+  .error404 {
+      font-size: 20px;
+      color: #8290a3;
+  }
+  .errors404 {
+      text-align: center;
+      margin-top: 10%;
+  }
+  
+/*FOOTER*/
+.copyright {
+    text-align: center;
+    margin-top: 10px;
+    padding: 10px;
+    color: #7a8ca5;
+    font-size: 13px;
+}
