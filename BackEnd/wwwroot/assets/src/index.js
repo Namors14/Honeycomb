@@ -2,13 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import Template from './template';
+import { Template } from './template';
+import { store } from './helpers';
 
 import './index.css';
 
 
 ReactDOM.render(
-    <Provider >
+    <Provider store={store}>
       <Template />
     </Provider>,
       document.getElementById('root')
