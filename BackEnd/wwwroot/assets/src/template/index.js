@@ -22,7 +22,6 @@ class Template extends Component {
 
         const { dispatch } = this.props;
         history.listen((location, action) => {
-            // clear alert on location change
             dispatch(alertActions.clear());
         });
     }
@@ -41,7 +40,7 @@ class Template extends Component {
                             path={path}
                             key={key}
                             render={ (route) =>
-                                localStorage.getItem('user') ? (
+                                localStorage.getItem('token')? (
                                     <Redirect to="/profile"/>
                                 ) : (
                                     <PublicLayout component={component} route={route}/>
@@ -59,7 +58,7 @@ class Template extends Component {
                             path={path}
                             key={key}
                             render={ (route) =>
-                                localStorage.getItem('user') ? (
+                                localStorage.getItem('token')? (
                                 <PrivateLayout component={component} route={route}/>
                                 ) : (
                                 <PublicLayout component={Login} route={route}/>

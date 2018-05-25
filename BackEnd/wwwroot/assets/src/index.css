@@ -1,9 +1,6 @@
 body, .layout {
    background: #333f4f
 }
-.layout {
-    margin-top: 5px;
-}
 .header {
     text-align: center;
     padding: 60px 0;
@@ -205,3 +202,58 @@ body, .layout {
     color: #7a8ca5;
     font-size: 13px;
 }
+
+.reg-footer {
+    background: #333f4f;
+    padding: 0;
+}
+
+
+
+.trigger {
+    font-size: 18px;
+    cursor: pointer;
+    transition: color .3s;
+    float: right;
+    padding-top: 2px;
+    color: #fff;
+  }
+
+  /* .trigger:hover {
+    color: #1890ff;
+  } */
+
+  .side-trigger {
+    background: '#2b3643';
+    height: 50;
+    padding: 14px 15px;
+  }
+
+  .ant-layout-sider-collapsed {
+    max-width: 50px !important;
+    min-width: 50px !important;
+    width: 50px !important;
+  }
+
+  .exit {
+    font-size: 18px;
+    cursor: pointer;
+    transition: color .3s;
+    color: #fff;
+  }
+
+  .logout {
+    
+  }
+
+  .ant-layout-header {
+    padding: 16px 30px;
+    line-height: 0px;
+  }
+  .header-icons {
+    float: right;
+  }
+
+  .username {
+      padding-right: 20px;
+  }

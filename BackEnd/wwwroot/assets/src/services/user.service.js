@@ -1,9 +1,10 @@
-import { authHeader, config } from '../helpers';
+import { authHeader, config, history } from '../helpers';
 import axios from 'axios';
 
 export const userService = {
     login,
-    logout
+    logout,
+    GetUser
 };
 
 function login(username, password) {
@@ -12,18 +13,26 @@ function login(username, password) {
         UserName: username,
         Password: password
       };
-
-console.log(123);
-    return axios.post(`/api/Account/Login`, logindata)
+    return axios.post(`/api/Account/Login`, logindata, { headers: authHeader() })
     .then(user => {
         if (user.data && user.data.token) {
-            localStorage.setItem('user', JSON.stringify(user.data));
+            localStorage.setItem('token', JSON.stringify(user.data.token));
         }
-
         return user.data;
-    });
+    }).catch(function (error) {
+        console.log(error);
+      });
 }
 
 function logout() {
-    localStorage.removeItem('user');
+        localStorage.removeItem('token');
+}
+
+function GetUser () {
+
+    return axios.get(`/api/Account/GetUser`, { headers: authHeader() })
+    .then(user => {
+        console.log(user.data);
+        return user.data
+    });
 }

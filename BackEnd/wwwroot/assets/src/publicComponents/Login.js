@@ -16,13 +16,10 @@ const FormItem = Form.Item;
     constructor(props) {
       super(props);
 
-     this.props.dispatch(userActions.logout());
-
       this.state = {
           error: "",
           username: '',
-          password: '',
-          submitted: false
+          password: ''
       };
   }
 
@@ -50,12 +47,12 @@ const FormItem = Form.Item;
         if (!err) {
           const { dispatch } = this.props;
             if (values.userName && values.password) {
-            dispatch(userActions.login(values.userName, values.password)).then(
-              user => {
-                this.setState({error: user.error})
-              }
-            );
-          }
+              dispatch(userActions.login(values.userName, values.password)).then(
+                user => {
+                  this.setState({error: user.error})
+                }
+              );
+          } 
         }
       });
     }

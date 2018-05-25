@@ -12,14 +12,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using BackEnd.Helpers;
-using BackEnd.Services;
-using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 
 namespace BackEnd
 {
@@ -33,69 +29,22 @@ namespace BackEnd
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            var corsBuilder = new CorsPolicyBuilder();
-            corsBuilder.AllowAnyHeader();
-            corsBuilder.AllowAnyMethod();
-            corsBuilder.AllowAnyOrigin(); // For anyone access.
-            corsBuilder.WithOrigins("https://localhost:44360"); // for a specific url. Don't add a forward slash on the end!
-            corsBuilder.AllowCredentials();
-            services.AddCors(options =>
+            //adding cors
+            services.AddCors(options => options.AddPolicy("Cors", builder =>
             {
-                options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
-            });
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            }));
 
-            //services.AddAutoMapper();
-
-            //services.AddTransient<IUserValidator<User>, CustomUserValidator>();
-
-            services.AddAuthentication(option =>
-            {
-                option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-                .AddFacebook(facebookOptions =>
-                {
-                    facebookOptions.AppId = "664604747264908";
-                    facebookOptions.AppSecret = "2218324feafe65174c1c0109f6da8d62";
-                })
-                .AddCookie();
-
-            // configure strongly typed settings objects
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
-            //// configure jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
-
-            //services.AddScoped<IUserService, UserService>();
-
-
+            //create database context
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            //standart validation
             services.AddIdentity<User, IdentityRole>(opts =>
             {
                 opts.Password.RequiredLength = 6;
@@ -103,7 +52,50 @@ namespace BackEnd
                 opts.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<ApplicationContext>()
-             .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders();
+
+            //custom validation
+            //services.AddTransient<IUserValidator<User>, CustomUserValidator>();
+
+            //get secret phrases
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            //adding jwt authentication
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.SaveToken = true;
+                cfg.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true
+                };
+            });
+
+            //services.AddAuthentication(option =>
+            //{
+            //    option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //})
+            //    .AddFacebook(facebookOptions =>
+            //    {
+            //        facebookOptions.AppId = "664604747264908";
+            //        facebookOptions.AppSecret = "2218324feafe65174c1c0109f6da8d62";
+            //    })
+            //    .AddCookie();
 
             services.AddMvc();
             
@@ -111,21 +103,17 @@ namespace BackEnd
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
 
-            app.UseCors("SiteCorsPolicy");
+            app.UseCors("Cors");
 
-            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

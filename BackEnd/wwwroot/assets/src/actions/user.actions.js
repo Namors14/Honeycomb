@@ -19,7 +19,6 @@ function login(username, password) {
                     {
                         return user;    
                     } else {
-                        dispatch(success(user));
                         history.push('/profile');
                         return user;
                     }
@@ -34,6 +33,5 @@ function login(username, password) {
 }
 
 function logout() {
-    userService.logout();
-    return { type: userConstants.LOGOUT };
+userService.logout()
 }

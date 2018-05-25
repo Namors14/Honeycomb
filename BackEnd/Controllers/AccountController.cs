@@ -11,11 +11,6 @@ using BackEnd.App;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using System;
-using Microsoft.AspNetCore.Authentication.Cookies;
-
-
-using BackEnd.Services;
-using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
 using BackEnd.Helpers;
 using Microsoft.Extensions.Options;
@@ -45,85 +40,69 @@ namespace CustomIdentityApp.Controllers
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
-
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        //private IUserService _userService;
-        //private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
-        public AccountController(/*IUserService userService, IMapper mapper, */IOptions<AppSettings> appSettings, UserManager<User> userManager, SignInManager<User> signInManager, IAuthenticationSchemeProvider authenticationSchemeProvider)
+        public AccountController(IOptions<AppSettings> appSettings, UserManager<User> userManager, SignInManager<User> signInManager, IAuthenticationSchemeProvider authenticationSchemeProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             this.authenticationSchemeProvider = authenticationSchemeProvider;
-            //_userService = userService;
-            //_mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
-        //[HttpPost]
-        //[Route("Login")]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> Login([FromBody]LoginModel userDto)
-        //{
-        //    //var user = _userService.Authenticate(userDto.UserName, userDto.Password);
-        //    var user = await _userManager.FindByNameAsync(userDto.UserName);
-        //    var Usersq = _userManager.Users.FirstOrDefault(m => m.UserName == userDto.UserName).Id;
-        //    if (user == null)
-        //        return BadRequest("Username or password is incorrect");
+        string CreateToken(IdentityUser user)
+        {
+            var claims = new Claim[]
+           {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id)
+           };
 
-        //    //var tokenHandler = new JwtSecurityTokenHandler();
-        //    //var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-        //    //var tokenDescriptor = new SecurityTokenDescriptor
-        //    //{
-        //    //    Subject = new ClaimsIdentity(new Claim[]
-        //    //    {
-        //    //        new Claim(ClaimTypes.Name, Usersq)
-        //    //    }),
-        //    //    Expires = DateTime.UtcNow.AddDays(7),
-        //    //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        //    //};
-        //    //var token = tokenHandler.CreateToken(tokenDescriptor);
-        //    //var tokenString = tokenHandler.WriteToken(token);
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret));
+            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
-        //    // return basic user info (without password) and token to store client side
-        //    return Ok(new
-        //    {
-        //        Id = user.Id,
-        //        Username = user.UserName,
-        //        //Token = tokenString
-        //    });
-        //}
+            var jwt = new JwtSecurityToken(signingCredentials: signingCredentials, claims: claims);
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetUSer")]
+        public async Task<IActionResult> GetUser()
+        {
+            var userId = HttpContext.User.Claims.First().Value;
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            return Ok(user);
+        }
 
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody]LoginModel userDto)
         {
+
             var result = await _signInManager.PasswordSignInAsync(userDto.UserName, userDto.Password, userDto.RememberMe, false);
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(userDto.UserName);
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-                var tokenDescriptor = new SecurityTokenDescriptor
+
+                if (user != null)
                 {
-                    Subject = new ClaimsIdentity(new Claim[]
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                    }),
-                    Expires = DateTime.UtcNow.AddMinutes(2),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                var tokenString = tokenHandler.WriteToken(token);
+                        return Ok(new
+                        {
+                            Error = "Email is not confirmed"
+                        });
+                    }
+                }
 
                 return Ok(new
                 {
-                    Id = user.Id,
-                    Username = user.UserName,
-                    Token = tokenString
+                    Token = CreateToken(user)
                 });
 
             }
@@ -135,60 +114,6 @@ namespace CustomIdentityApp.Controllers
                 });
             }
         }
-
-
-
-        //[HttpPost]
-        //[Route("Login")]
-        //[AllowAnonymous]
-
-        //public async Task<IActionResult> Login([FromBody]LoginModel model)
-        //{
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var tokenHandler = new JwtSecurityTokenHandler();
-        //        var key = Encoding.ASCII.GetBytes("asdqwe");
-        //        var tokenDescriptor = new SecurityTokenDescriptor
-        //        {
-        //            Subject = new ClaimsIdentity(new Claim[]
-        //            {
-        //                new Claim(ClaimTypes.Name, Usersq)
-        //            }),
-        //            Expires = DateTime.UtcNow.AddDays(7),
-        //            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        //        };
-
-        //        var token = tokenHandler.CreateToken(tokenDescriptor);
-        //        var tokenString = tokenHandler.WriteToken(token);
-        //        if (user != null)
-        //        {
-        //            // проверяем, подтвержден ли email
-        //            if (!await _userManager.IsEmailConfirmedAsync(user))
-        //            {
-        //                return BadRequest("Username or password is incorrect");
-        //            }
-        //        }
-
-        //        var result =
-        //            await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
-        //        if (result.Succeeded)
-        //        {
-        //            return Ok(new
-        //            {
-        //                Id = user.Id,
-        //                Username = user.UserName,
-        //                Token = tokenString
-        //            });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest("Username or password is incorrect");
-        //        }
-        //    }
-
-        //    return BadRequest("Username or password is incorrect");
-        //}
 
         [HttpPost]
         [Route("Register")]

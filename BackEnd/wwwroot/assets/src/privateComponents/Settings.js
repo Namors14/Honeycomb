@@ -1,9 +1,9 @@
 import React from 'react'
 
-export const Profile = () => {
+export const Settings = () => {
   return (
     <div style={{textAlign: 'center'}}>
-      <h3 className="form-title">Welcome!!!</h3>
+      <h3 className="form-title">Settings!!!</h3>
     </div>
   )
 }
