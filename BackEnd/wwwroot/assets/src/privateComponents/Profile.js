@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userService } from '../services';
 
-import { Row, Col, Spin, List } from 'antd';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Row, Col, Spin, List} from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Card} from 'antd';
 
 
 import { userActions } from '../actions';
@@ -20,26 +20,43 @@ class Profile extends Component {
       render() {
         const {user} = this.props; 
         const data = [
-          user.details,
-          user.name,
-          user.address,
-          user.city,
-          user.country
+          {title: 'Full name', content: user.details},
+          {title: 'User name', content: user.name},
+          {title: 'Email', content: user.email},
+          {title: 'Address', content: user.address},
+          {title: 'City', content: user.city},
+          {title: 'Country', content: user.country},
+          {title: 'Date of study', content: '14-04-1998'}
         ]
-        console.log(user);
         if(false) { 
           return (<div className="example"><Spin /></div>)
         }
         return(
-          <div style={{textAlign: 'center'}}>
-            <List
-              header={<div>Header</div>}
-              footer={<div>Footer</div>}
-              bordered
-              dataSource={data}
-              renderItem={item => (<List.Item>{item}</List.Item>)}
-            />
-          </div>
+          <Layout className="profile-layout">
+            <Row>
+              <Col xs={{ span: 0 }} md = {{ span : 7 }} lg={{ span: 7 }} className = "profile-picture">
+              <Card 
+                  
+                  hoverable
+                  cover={<img src="http://icons.iconarchive.com/icons/icons-land/vista-people/256/Person-Male-Light-icon.png" />}
+                  >
+                  </Card>
+              </Col>
+              <Col xs={{ span: 0 }} md = {{ span : 2 }} lg={{ span: 2 }}></Col>
+              <Col xs={{ span: 24 }} md = {{ span : 15 }} lg={{ span: 15 }} className="user-info"> 
+              <div >
+                  <List
+                  bordered
+                  dataSource={data}
+                  renderItem={item => (
+                  <List.Item>
+                    <pre className="profile-list-item"><b>{item.title} :  </b>{item.content} </pre>
+                  </List.Item>)}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Layout>
         )
       }
 }

@@ -275,3 +275,19 @@ body, .layout {
   .menu {
     color: #fff;
   }
+
+  .profile-layout {
+    background: #fff;
+  }
+
+  .profile-list-item
+{
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+}
+
+.profile-picture {
+}
+
+.user-info {
+
+}

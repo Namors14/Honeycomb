@@ -105,6 +105,7 @@ namespace CustomIdentityApp.Controllers
                     Name = user.UserName,
                     Details = user.Details,
                     Address = user.Address,
+                    Email = user.Email,
                     Country = user.Country,
                     City = user.City,
                     Token = CreateToken(user)

@@ -1,6 +1,6 @@
 import { Profile } from '../../privateComponents/Profile';
 import { Settings } from '../../privateComponents/Settings';
-import { Calendar } from '../../privateComponents/Calendar';
+import { Calendars } from '../../privateComponents/Calendar';
 
 export default {
     Profile: {
@@ -11,8 +11,8 @@ export default {
         component: Settings,
         path: '/settings'
     },
-    Calendar: {
-        component: Calendar,
+    Calendars: {
+        component: Calendars,
         path: '/calendar'
     },
     
