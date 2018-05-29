@@ -5,24 +5,23 @@ import { history } from '../helpers';
 
 export const userActions = {
     login,
-    logout
+    logout,
+    GetUser
 };
 
 function login(username, password) {
     return dispatch => {
         dispatch(request({ username }));
 
-       return  userService.login(username, password)
+        userService.login(username, password)
             .then(
                 user => { 
-                    if(user.error)
-                    {
-                        return user;    
-                    } else {
-                        history.push('/profile');
-                        return user;
-                    }
-                    
+                    dispatch(success(user));
+                    history.push('/profile');
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
                 }
             );
     };
@@ -32,6 +31,25 @@ function login(username, password) {
     function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
 }
 
+
+
+
 function logout() {
 userService.logout()
+}
+
+function GetUser() {
+    return dispatch => {
+        dispatch(request());
+
+        userService.GetUser()
+            .then(
+                user => dispatch(success(user)),
+                error => dispatch(failure(error))
+            );
+    };
+
+    function request(user) { return { type: userConstants.GETUSER_REQUEST, user } }
+    function success(user) { return { type: userConstants.GETUSER_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.GETUSER_FAILURE, error } }
 }

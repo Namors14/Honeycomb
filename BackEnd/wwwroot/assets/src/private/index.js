@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userService } from '../services';
 
-import { Row, Col } from 'antd';
+import { Row, Col, Spin } from 'antd';
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 
 
@@ -21,12 +21,11 @@ import { history } from '../helpers';
 
 
 class PrivateLayout extends Component {
-  
+
         state = {
             collapsed: false,
-            username: ""
           };
-    
+
       toggle = () => {
         this.setState({
           collapsed: !this.state.collapsed,
@@ -37,20 +36,15 @@ class PrivateLayout extends Component {
           userActions.logout();
           history.push('/');
       }
-      GetUserInfo(){
-           userService.GetUser().then(x=>{
-           this.setState({
-            username: x.userName,
-          });
-       })
-      }
-      componentDidMount() {
-          this.GetUserInfo()
-      }
+
+
 
       render() {
+        const { user } = this.props;
+        console.log(user.name)
         const Component = this.props.component;
         const route = this.props.route;
+        const menuSelected = location.pathname;
         const divStyle = this.state.collapsed? {display: 'none'} : {display: 'inline'};
         return (
             <Layout className="layout">
@@ -69,14 +63,27 @@ class PrivateLayout extends Component {
                                 onClick={this.toggle}/>
                             </span>
                         </div>
-                        <div>
-                            <Link to="settings">Settings</Link>
+                        <div className="menu">
+                        <Menu mode="inline" defaultSelectedKeys={[menuSelected]}>
+                        <Menu.Item  key="/profile">
+                        <Link to="/profile"><Icon type="user" />
+                        <span>Profile</span></Link>
+                        </Menu.Item>
+                        <Menu.Item key="/calendar">
+                        <Link to="/calendar"><Icon type="calendar" />
+                        <span>Calendar</span></Link>
+                        </Menu.Item>
+                        <Menu.Item key="/settings">
+                        <Link to="/settings"><Icon type="setting" />
+                        <span>Settings</span></Link>
+                        </Menu.Item>
+                        </Menu>
                         </div>
                     </Sider>
                     <Layout>
                         <Header style={{background: '#2b3643', height: 50}}>
                             <div className="header-icons">
-                            <span className="exit username">{this.state.username}</span>
+                            <span className="exit username">{user.name}</span>
                             <span className="logout">
                                 <Icon
                                 className="exit"
@@ -85,9 +92,9 @@ class PrivateLayout extends Component {
                             </span>
                             </div>
                         </Header>
-                        <Content>
+                        <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
                             <div>
-                            <Component route={route}/>
+                                <Component route={route}/>
                             </div>
                         </Content>
                     </Layout>
@@ -99,4 +106,15 @@ class PrivateLayout extends Component {
         );
       }
 }
-export default PrivateLayout
+
+function mapStateToProps(state) {
+    const { authentication } = state;
+    const  user  = authentication.user;
+    return {
+        user
+    };
+}
+
+const connectedPrivateLayout = connect(mapStateToProps)(PrivateLayout);
+export { connectedPrivateLayout as PrivateLayout};
+// export default PrivateLayout

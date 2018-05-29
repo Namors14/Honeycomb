@@ -226,14 +226,14 @@ body, .layout {
   .side-trigger {
     background: '#2b3643';
     height: 50;
-    padding: 14px 15px;
+    padding: 14px 32px;
   }
-
+/* 
   .ant-layout-sider-collapsed {
     max-width: 50px !important;
     min-width: 50px !important;
     width: 50px !important;
-  }
+  } */
 
   .exit {
     font-size: 18px;
@@ -256,4 +256,22 @@ body, .layout {
 
   .username {
       padding-right: 20px;
+  }
+
+  .example {
+    text-align: center;
+    background: rgba(0,0,0,0.05);
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 30px 50px;
+    margin: 20px 0;
+  }
+
+  .ant-menu {
+    color: white;
+    background: #333f4f;
+  }
+
+  .menu {
+    color: #fff;
   }

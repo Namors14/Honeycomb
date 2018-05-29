@@ -47,11 +47,12 @@ const FormItem = Form.Item;
         if (!err) {
           const { dispatch } = this.props;
             if (values.userName && values.password) {
-              dispatch(userActions.login(values.userName, values.password)).then(
-                user => {
-                  this.setState({error: user.error})
-                }
-              );
+              dispatch(userActions.login(values.userName, values.password));
+              // .then(
+              //   user => {
+              //     this.setState({error: user.error})
+              //   }
+              // );
           } 
         }
       });

@@ -4,22 +4,23 @@ let user = JSON.parse(localStorage.getItem('user'));
 const initialState = user ? { loggedIn: true, user } : {};
 
 export function authentication(state = initialState, action) {
+  var user = Object.assign({}, state);
   switch (action.type) {
     case userConstants.LOGIN_REQUEST:
-      return {
-        loggingIn: true,
-        user: action.user
-      };
+    return Object.assign({}, state,{
+      loggingIn: true,
+      user: action.user
+    });
     case userConstants.LOGIN_SUCCESS:
-      return {
-        loggedIn: true,
-        user: action.user
-      };
+    return Object.assign({}, state,{
+      loggedIn: true,
+      user: action.user
+    });
     case userConstants.LOGIN_FAILURE:
-      return {};
+      return Object.assign({});
     case userConstants.LOGOUT:
-      return {};
+      return Object.assign({});
     default:
-      return state
+      return Object.assign({}, state);
   }
 }

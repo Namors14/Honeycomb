@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import _ from 'lodash';
 
 import PublicLayout  from '../public';
-import PrivateLayout  from '../private';
+import {PrivateLayout} from '../private';
 
 import publicRoutes  from './routes/publicRoutes';
 import privateRoutes  from './routes/privateRoutes';
@@ -40,7 +40,7 @@ class Template extends Component {
                             path={path}
                             key={key}
                             render={ (route) =>
-                                localStorage.getItem('token')? (
+                                localStorage.getItem('user')? (
                                     <Redirect to="/profile"/>
                                 ) : (
                                     <PublicLayout component={component} route={route}/>
@@ -58,7 +58,7 @@ class Template extends Component {
                             path={path}
                             key={key}
                             render={ (route) =>
-                                localStorage.getItem('token')? (
+                                localStorage.getItem('user')? (
                                 <PrivateLayout component={component} route={route}/>
                                 ) : (
                                 <PublicLayout component={Login} route={route}/>
@@ -76,9 +76,11 @@ class Template extends Component {
 }
 
 function mapStateToProps(state) {
-    const { alert } = state;
+    const { alert, authentication } = state;
+    const { user } = authentication;
     return {
-        alert
+        alert,
+        user
     };
 }
 

@@ -13,26 +13,52 @@ function login(username, password) {
         UserName: username,
         Password: password
       };
-    return axios.post(`/api/Account/Login`, logindata, { headers: authHeader() })
+    return axios.post(`/api/Account/Login`, logindata)
     .then(user => {
         if (user.data && user.data.token) {
-            localStorage.setItem('token', JSON.stringify(user.data.token));
+            localStorage.setItem('user', JSON.stringify(user.data));
         }
         return user.data;
-    }).catch(function (error) {
-        console.log(error);
-      });
+    });
 }
 
 function logout() {
-        localStorage.removeItem('token');
+        localStorage.removeItem('user');
 }
 
 function GetUser () {
 
     return axios.get(`/api/Account/GetUser`, { headers: authHeader() })
     .then(user => {
-        console.log(user.data);
         return user.data
     });
+
+    // const requestOptions = {
+    //     method: 'GET',
+    //     headers: authHeader()
+    // };
+
+    // return fetch(`/api/Account/GetUser`, requestOptions).then(handleResponse, handleError);
+}
+
+
+function handleResponse(response) {
+    return new Promise((resolve, reject) => {
+        if (response.ok) {
+            // return json if it was returned in the response
+            var contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                response.json().then(json => resolve(json));
+            } else {
+                resolve();
+            }
+        } else {
+            // return error message from response body
+            response.text().then(text => reject(text));
+        }
+    });
+}
+
+function handleError(error) {
+    return Promise.reject(error && error.message);
 }

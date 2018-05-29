@@ -102,6 +102,11 @@ namespace CustomIdentityApp.Controllers
 
                 return Ok(new
                 {
+                    Name = user.UserName,
+                    Details = user.Details,
+                    Address = user.Address,
+                    Country = user.Country,
+                    City = user.City,
                     Token = CreateToken(user)
                 });
 
