@@ -41,7 +41,6 @@ class PrivateLayout extends Component {
 
       render() {
         const { user } = this.props;
-        console.log(user.name)
         const Component = this.props.component;
         const route = this.props.route;
         const menuSelected = location.pathname;

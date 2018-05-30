@@ -20,27 +20,12 @@ class Calendars extends Component {
     Loading: true
   }
 
-  // componentDidMount()
-  // {
-  //   this.getInfo();
-  // }
+  componentDidMount()
+  {
+    this.setState({selectedValue : this.props.user.studyDate});
+    this.setState({value : moment(this.props.user.studyDate)});
 
-  // getInfo =() =>
-  //   {
-  //     const qwt = JSON.parse(localStorage.getItem('token')).token;
-
-  //     $.ajax({
-  //         type: "POST", 
-  //         url: '/api/Info/GetUserDate', 
-  //         beforeSend: function (xhr) {   
-  //             xhr.setRequestHeader("Authorization", 'Bearer '+ qwt);
-  //         },
-  //         success: data => {
-  //           this.setState({selectedValue : data.date});
-  //           this.setState({Loading : false});
-  //         }
-  //       });
-  //     } 
+  }
 
   disabledDate = (current) => {
     return current && current < moment().endOf('day');
@@ -51,23 +36,12 @@ class Calendars extends Component {
       value, selectedValue : value.format('YYYY-MM-DD')
     });
      
-    const date_ =
-    {
-      date : value.format('YYYY-MM-DD')
-    };
+    const date = value.format('YYYY-MM-DD')
+    console.log(this.props.user.name)
+    const { dispatch } = this.props;
+    dispatch(userActions.SetDate(this.props.user.name, date));
 
-    // $.ajax({
-    //       type: "POST", 
-    //       url: '/api/Info/SetUserDate', 
-    //       data: JSON.stringify(date_),
-    //       dataType: "json",
-    //       contentType: "application/json; charset=utf-8",
-    //       beforeSend: function (xhr) {   
-    //         xhr.setRequestHeader("Authorization", 'Bearer '+ qwt);
-    //       }
-    //   });
-
-    //   message.success('Your date study beginning has been changed', 5);
+      message.success('Your date study beginning has been changed', 5);
   }
   onPanelChange = (value) => {
     this.setState({ value });

@@ -11,9 +11,10 @@ using System;
 namespace BackEnd.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20180530104708_InitialStudyDate")]
+    partial class InitialStudyDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +64,7 @@ namespace BackEnd.Migrations
 
                     b.Property<string>("SecurityStamp");
 
-                    b.Property<DateTime?>("StartStudy");
+                    b.Property<DateTime>("StartStudy");
 
                     b.Property<bool>("TwoFactorEnabled");
 

@@ -48,11 +48,6 @@ const FormItem = Form.Item;
           const { dispatch } = this.props;
             if (values.userName && values.password) {
               dispatch(userActions.login(values.userName, values.password));
-              // .then(
-              //   user => {
-              //     this.setState({error: user.error})
-              //   }
-              // );
           } 
         }
       });

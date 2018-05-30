@@ -6,7 +6,8 @@ import { history } from '../helpers';
 export const userActions = {
     login,
     logout,
-    GetUser
+    GetUser,
+    SetDate
 };
 
 function login(username, password) {
@@ -18,6 +19,28 @@ function login(username, password) {
                 user => { 
                     dispatch(success(user));
                     history.push('/profile');
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
+    function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
+}
+
+
+function SetDate(username, date) {
+    return dispatch => {
+        dispatch(request({ username }));
+
+        userService.SetDate(date)
+            .then(
+                user => { 
+                    dispatch(success(user));
                 },
                 error => {
                     dispatch(failure(error));

@@ -5,7 +5,7 @@ import { userService } from '../services';
 
 import { Row, Col, Spin, List} from 'antd';
 import { Layout, Menu, Breadcrumb, Icon, Card} from 'antd';
-
+import moment from 'moment';
 
 import { userActions } from '../actions';
 import { history } from '../helpers';
@@ -26,7 +26,7 @@ class Profile extends Component {
           {title: 'Address', content: user.address},
           {title: 'City', content: user.city},
           {title: 'Country', content: user.country},
-          {title: 'Date of study', content: '14-04-1998'}
+          {title: 'Date of study', content: !user.studyDate ? "--/--/--" : user.studyDate}
         ]
         if(false) { 
           return (<div className="example"><Spin /></div>)

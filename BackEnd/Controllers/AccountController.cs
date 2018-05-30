@@ -108,6 +108,7 @@ namespace CustomIdentityApp.Controllers
                     Email = user.Email,
                     Country = user.Country,
                     City = user.City,
+                    StudyDate = user.StartStudy.Value.ToShortDateString(),
                     Token = CreateToken(user)
                 });
 
@@ -120,6 +121,8 @@ namespace CustomIdentityApp.Controllers
                 });
             }
         }
+
+
 
         [HttpPost]
         [Route("Register")]

@@ -17,5 +17,7 @@ namespace BackEnd.Models
         public string Country { get; set; }
 
         public string Password { get; set; }
+
+        public DateTime? StartStudy{ get; set; }
     }
 }
