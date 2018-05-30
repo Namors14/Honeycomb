@@ -23,7 +23,10 @@ class Calendars extends Component {
   componentDidMount()
   {
     this.setState({selectedValue : this.props.user.studyDate});
-    this.setState({value : moment(this.props.user.studyDate)});
+    if(this.props.user.studyDate){
+      this.setState({value : moment(this.props.user.studyDate)});
+    }
+    
 
   }
 

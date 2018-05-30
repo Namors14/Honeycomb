@@ -30,7 +30,7 @@ namespace BackEnd.Controllers
             public string date { get; set; }
         }
 
-        [Authorize]
+        [Authorize(Roles ="user")]
         [HttpPost]
         [Route("SetStudyDate")]
         public async Task<IActionResult> SetStudyDate([FromBody]DateModel data)

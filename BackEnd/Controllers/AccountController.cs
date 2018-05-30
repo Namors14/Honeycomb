@@ -53,12 +53,18 @@ namespace CustomIdentityApp.Controllers
             _appSettings = appSettings.Value;
         }
 
-        string CreateToken(IdentityUser user)
+      public  async Task<string> CreateToken(User user)
         {
-            var claims = new Claim[]
+            var claims = new List<Claim>
            {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id)
            };
+
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var item in roles)
+            {
+                claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, item));
+            }
 
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret));
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
@@ -100,6 +106,23 @@ namespace CustomIdentityApp.Controllers
                     }
                 }
 
+                var roles = await _userManager.GetRolesAsync(user);
+
+                var claims = new List<Claim>
+                {
+                     new Claim(JwtRegisteredClaimNames.Sub, user.Id)
+                };
+                foreach (var item in roles)
+                {
+                    claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, item));
+                }
+
+                var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret));
+                var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+
+                var jwt = new JwtSecurityToken(signingCredentials: signingCredentials, claims: claims);
+                var token = new JwtSecurityTokenHandler().WriteToken(jwt);
+
                 return Ok(new
                 {
                     Name = user.UserName,
@@ -108,8 +131,8 @@ namespace CustomIdentityApp.Controllers
                     Email = user.Email,
                     Country = user.Country,
                     City = user.City,
-                    StudyDate = user.StartStudy.Value.ToShortDateString(),
-                    Token = CreateToken(user)
+                    StudyDate = (user.StartStudy==null)? null : user.StartStudy.Value.ToShortDateString(),
+                    Token = token
                 });
 
             }
@@ -137,6 +160,7 @@ namespace CustomIdentityApp.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    var role = await _userManager.AddToRolesAsync(user, new List<string>() { "user" });
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action(
                         "ConfirmEmail",
