@@ -5,7 +5,8 @@ export const userService = {
     login,
     logout,
     GetUser,
-    SetDate
+    SetDate,
+    GetUsers
 };
 
 function login(username, password) {
@@ -29,20 +30,28 @@ function SetDate(date) {
         date: date
       };
       console.log("here")
-    return axios.post(`/api/User/SetStudyDate`, data,{ headers: authHeader() })
+    return axios.post(`/api/User/SetStudyDate`, data, { headers: authHeader() })
     .then(ok => {
-        console.log("here1");
-        console.log(ok.data)
         let user = JSON.parse(localStorage.getItem('user'));
         if (ok.data.success=="ok") {
-            
             localStorage.removeItem('user');
             user.studyDate = data.date;
-            console.log(user);
             localStorage.setItem('user', JSON.stringify(user));
         }
         return user;
     });
+}
+
+function GetUsers() {
+
+    console.log("services");
+    return axios.get(`/api/Admin/GetUsers`, { headers: authHeader() })
+    .then(users => {
+        console.log("getusers");
+        console.log(users.data);
+        return users.data
+    });
+
 }
 
 function logout() {

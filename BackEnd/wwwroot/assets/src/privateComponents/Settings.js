@@ -32,10 +32,11 @@ class Settings extends Component {
 }
 
 function mapStateToProps(state) {
-    const { user} = state;
-    return {
-        user
-    };
+  const { authentication } = state;
+  const { user } = authentication;
+  return {
+      user
+  };
 }
 
 const connectedSettings = connect(mapStateToProps)(Settings);

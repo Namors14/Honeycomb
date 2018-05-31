@@ -6,6 +6,6 @@
     "plugins": [
         "babel-plugin-transform-class-properties",
         ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }],
-        "transform-es2015-spread"
+        "transform-object-rest-spread"
     ]
 }

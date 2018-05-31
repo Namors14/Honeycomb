@@ -44,6 +44,11 @@ class PrivateLayout extends Component {
         const Component = this.props.component;
         const route = this.props.route;
         const menuSelected = location.pathname;
+        const adminCabinet = user.roles.some(x=>x=="admin") ? (
+        <Menu.Item key="/adminpanel">
+        <Link to="/adminpanel"><Icon type="idcard" />
+        <span>Admin Panel</span></Link>
+        </Menu.Item>) : "";
         const divStyle = this.state.collapsed? {display: 'none'} : {display: 'inline'};
         return (
             <Layout className="layout">
@@ -64,6 +69,7 @@ class PrivateLayout extends Component {
                         </div>
                         <div className="menu">
                         <Menu mode="inline" defaultSelectedKeys={[menuSelected]}>
+                        {adminCabinet}
                         <Menu.Item  key="/profile">
                         <Link to="/profile"><Icon type="user" />
                         <span>Profile</span></Link>
@@ -84,10 +90,12 @@ class PrivateLayout extends Component {
                             <div className="header-icons">
                             <span className="exit username">{user.name}</span>
                             <span className="logout">
+                            <Link to="/">
                                 <Icon
                                 className="exit"
                                 type='logout'
                                 onClick={this.exit}/>
+                            </Link>
                             </span>
                             </div>
                         </Header>

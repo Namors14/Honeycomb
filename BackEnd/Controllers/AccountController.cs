@@ -91,6 +91,7 @@ namespace CustomIdentityApp.Controllers
         {
 
             var result = await _signInManager.PasswordSignInAsync(userDto.UserName, userDto.Password, userDto.RememberMe, false);
+            
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(userDto.UserName);
@@ -131,6 +132,7 @@ namespace CustomIdentityApp.Controllers
                     Email = user.Email,
                     Country = user.Country,
                     City = user.City,
+                    Roles = roles,
                     StudyDate = (user.StartStudy==null)? null : user.StartStudy.Value.ToShortDateString(),
                     Token = token
                 });
@@ -270,15 +272,6 @@ namespace CustomIdentityApp.Controllers
             return errors;
         }
 
-       
-        
-        //public async Task<IActionResult> FacebookLogin1()
-        //{
-        //    var allSchemeProvider = (await authenticationSchemeProvider.GetAllSchemesAsync()).
-        //        Select(n => n.DisplayName).Where(n => !String.IsNullOrEmpty(n));
-
-        //    return View(allSchemeProvider);
-        //}
         [HttpGet]
         [AllowAnonymous]
         [Route("FacebookLogin")]
