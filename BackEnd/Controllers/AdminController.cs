@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ReflectionIT.Mvc.Paging;
 
 namespace BackEnd.Controllers
 {
@@ -31,6 +32,8 @@ namespace BackEnd.Controllers
             public string field { get; set; }
 
             public string order { get; set; }
+
+            public string filter { get; set; }
         }
 
         [Authorize(Roles = "admin")]
@@ -38,22 +41,47 @@ namespace BackEnd.Controllers
         [Route("GetUsers")]
         public async Task<IActionResult> GetUsers([FromBody]PaginModel pagin)
         {
-            var usersdata = _context.Users.OrderBy(m=>m.UserName).Skip(pagin.results*(pagin.page-1))
-                .Select(user => new
+            //var usersdata = _context.Users.OrderBy(m => m.UserName).Skip(pagin.results * (pagin.page - 1))
+            //    .Select(user => new
+            //    {
+            //        name = user.UserName,
+            //        email = user.Email,
+            //        details = user.Details,
+            //        country = user.Country,
+            //        city = user.City,
+            //        address = user.Address,
+            //        startstudy = (user.StartStudy == null) ? null : user.StartStudy.Value.ToShortDateString()
+            //    });
+
+            var qry  = _context.Users.OrderBy(m => m.UserName)
+                 .Select(user => new
+                 {
+                     name = user.UserName,
+                     email = user.Email,
+                     details = user.Details,
+                     country = user.Country,
+                     city = user.City,
+                     address = user.Address,
+                     startstudy = (user.StartStudy == null) ? null : user.StartStudy.Value.ToShortDateString()
+                 });
+            int count = _context.Users.Count();
+
+            if (!string.IsNullOrWhiteSpace(pagin.filter))
             {
-                name = user.UserName,
-                email = user.Email,
-                details = user.Details,
-                country = user.Country,
-                city = user.City,
-                address = user.Address,
-                startstudy = (user.StartStudy == null) ? null : user.StartStudy.Value.ToShortDateString()
-            });
+                qry = qry.Where(p => p.name.Contains(pagin.filter));
+            }
+
+            var model = await PagingList.CreateAsync(
+                                 qry, pagin.results, pagin.page, pagin.field, pagin.field);
+
+            model.RouteValue = new RouteValueDictionary {
+        { "filter", pagin.filter}
+            };
 
             return Ok(new
             {
-                all = _context.Users.Count(),
-                users = usersdata.Take(pagin.results)
+                all = count,
+                users = model
             });
         }
     }

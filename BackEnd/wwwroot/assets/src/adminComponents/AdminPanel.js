@@ -23,11 +23,12 @@ class AdminPanel extends Component {
   
         this.state = {
             data: [],
-            pagination: {defaultPageSize:2},
+            pagination: {defaultPageSize:2, showSizeChanger:true, pageSizeOptions: ['2', '5', '10', '20']},
             loading: false,
             sortedInfo: null,
             field: "name",
-            order: "askend",
+            order: null,
+            filter: null,
         };
     }
 
@@ -38,16 +39,20 @@ class AdminPanel extends Component {
         });
         const pager = { ...this.state.pagination };
         pager.current = pagination.current;
-        this.setState({
-          pagination: pager,
-          field: sorter.field,
-          order: sorter.order,
-        });
+        if(sorter.field) {
+          this.setState({
+            pagination: pager,
+            field: sorter.field,
+            order: null,
+          });
+        }
+        
         this.GetUsers({
           results: pagination.pageSize,
           page: pagination.current,
           field: this.state.field,
-          order: this.state.order
+          order: this.state.order,
+          filter: this.state.filter
         });
       }
 
@@ -61,6 +66,7 @@ class AdminPanel extends Component {
         .then(users => {
             const pagination = { ...this.state.pagination };
             pagination.total = users.data.all;
+            console.log(users.data);
             this.setState({
                 loading: false,
                 data: users.data.users,
@@ -74,7 +80,8 @@ class AdminPanel extends Component {
             results: 2,
             page: 1,
             field: this.state.field,
-            order: this.state.order
+            order: this.state.order,
+            filter: this.state.filter
           });
       }
 
@@ -84,48 +91,48 @@ class AdminPanel extends Component {
         sortedInfo = sortedInfo || {};
 
         const columns = [{
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            sorter: true,
-            sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-          }, {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-            sorter: true,
-            sortOrder: sortedInfo.columnKey === 'email' && sortedInfo.order,
-          }, {
-            title: 'Details',
-            dataIndex: 'details',
-            key: 'details',
-            sorter: true,
-            sortOrder: sortedInfo.columnKey === 'details' && sortedInfo.order,
-          }, {
-            title: 'Country',
-            dataIndex: 'country',
-            key: 'country',
-            sorter: true,
-            sortOrder: sortedInfo.columnKey === 'country' && sortedInfo.order,
-          }, {
-            title: 'City',
-            dataIndex: 'city',
-            key: 'city',
-            sorter: true,
-            sortOrder: sortedInfo.columnKey === 'city' && sortedInfo.order,
-          }, {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-            sorter: true,
-            sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
-          }, {
-            title: 'Start Study',
-            dataIndex: 'startstudy',
-            key: 'startstudy',
-            sorter: true,
-            sortOrder: sortedInfo.columnKey === 'startstudy' && sortedInfo.order,
-          }];
+          title: 'Name',
+          dataIndex: 'name',
+          key: 'name',
+          sorter: true,
+          sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
+        }, {
+          title: 'Email',
+          dataIndex: 'email',
+          key: 'email',
+          sorter: true,
+          sortOrder: sortedInfo.columnKey === 'email' && sortedInfo.order,
+        }, {
+          title: 'Details',
+          dataIndex: 'details',
+          key: 'details',
+          sorter: true,
+          sortOrder: sortedInfo.columnKey === 'details' && sortedInfo.order,
+        }, {
+          title: 'Country',
+          dataIndex: 'country',
+          key: 'country',
+          sorter: true,
+          sortOrder: sortedInfo.columnKey === 'country' && sortedInfo.order,
+        }, {
+          title: 'City',
+          dataIndex: 'city',
+          key: 'city',
+          sorter: true,
+          sortOrder: sortedInfo.columnKey === 'city' && sortedInfo.order,
+        }, {
+          title: 'Address',
+          dataIndex: 'address',
+          key: 'address',
+          sorter: true,
+          sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
+        }, {
+          title: 'Start Study',
+          dataIndex: 'startstudy',
+          key: 'startstudy',
+          sorter: true,
+          sortOrder: sortedInfo.columnKey === 'startstudy' && sortedInfo.order,
+        }];
         if(false) { 
           return (<div className="example"><Spin /></div>)
         }
