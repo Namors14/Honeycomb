@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using ReflectionIT.Mvc.Paging;
 
 namespace BackEnd.Controllers
@@ -30,8 +31,6 @@ namespace BackEnd.Controllers
             public int page { get; set; }
 
             public string field { get; set; }
-
-            public string order { get; set; }
 
             public string filter { get; set; }
         }
@@ -64,19 +63,21 @@ namespace BackEnd.Controllers
                      address = user.Address,
                      startstudy = (user.StartStudy == null) ? null : user.StartStudy.Value.ToShortDateString()
                  });
-            int count = _context.Users.Count();
+            
 
             if (!string.IsNullOrWhiteSpace(pagin.filter))
             {
                 qry = qry.Where(p => p.name.Contains(pagin.filter));
             }
 
-            var model = await PagingList.CreateAsync(
-                                 qry, pagin.results, pagin.page, pagin.field, pagin.field);
+            int count = qry.Count();
 
-            model.RouteValue = new RouteValueDictionary {
-        { "filter", pagin.filter}
-            };
+            var model = await PagingList.CreateAsync(
+                                 qry, pagin.results, pagin.page, pagin.field, "name");
+
+        //    model.RouteValue = new RouteValueDictionary {
+        //{ "filter", pagin.filter}
+        //    };
 
             return Ok(new
             {

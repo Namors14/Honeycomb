@@ -16,6 +16,7 @@ using BackEnd.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Hangfire;
 
 namespace BackEnd
 {
@@ -84,6 +85,11 @@ namespace BackEnd
                 };
             });
 
+            services.AddHangfire(config =>
+            {
+                config.UseSqlServerStorage("Server=(localdb)\\mssqllocaldb;Database=localdb;Trusted_Connection=True;MultipleActiveResultSets=true");
+            });
+
             //services.AddAuthentication(option =>
             //{
             //    option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -105,12 +111,15 @@ namespace BackEnd
         {
             app.UseAuthentication();
 
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseStaticFiles();
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
 
             app.UseCors("Cors");
 

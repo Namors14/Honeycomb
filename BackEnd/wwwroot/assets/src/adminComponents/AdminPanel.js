@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,  Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userService } from '../services';
 import { authHeader, config } from '../helpers';
 import axios from 'axios';
 import { Pagination } from 'antd';
+import { Input } from 'antd';
+const Search = Input.Search;
 
 import { Row, Col, Spin } from 'antd';
 import { Layout, Menu, Breadcrumb, Icon, Table } from 'antd';
@@ -23,35 +25,28 @@ class AdminPanel extends Component {
   
         this.state = {
             data: [],
-            pagination: {defaultPageSize:2, showSizeChanger:true, pageSizeOptions: ['2', '5', '10', '20']},
+            pagination: {defaultPageSize:10, showSizeChanger:true, pageSizeOptions: ['2', '5', '10', '20']},
             loading: false,
-            sortedInfo: null,
             field: "name",
-            order: null,
             filter: null,
         };
     }
 
     handleTableChange = (pagination, filters, sorter) => {
-        console.log(sorter);
-        this.setState({
-            sortedInfo: sorter,
-        });
+        let fields;
+        if(sorter.field) {
+          this.setState({ field: sorter.field });
+          fields = sorter.field
+        } else {
+          fields = this.state.field;
+        }
         const pager = { ...this.state.pagination };
         pager.current = pagination.current;
-        if(sorter.field) {
-          this.setState({
-            pagination: pager,
-            field: sorter.field,
-            order: null,
-          });
-        }
-        
+
         this.GetUsers({
           results: pagination.pageSize,
           page: pagination.current,
-          field: this.state.field,
-          order: this.state.order,
+          field: fields,
           filter: this.state.filter
         });
       }
@@ -61,6 +56,7 @@ class AdminPanel extends Component {
         const data= {
                 ...params,
               }
+        console.log(this.state)
         console.log(data);
         axios.post(`/api/Admin/GetUsers`, data , { headers: authHeader() })
         .then(users => {
@@ -70,23 +66,35 @@ class AdminPanel extends Component {
             this.setState({
                 loading: false,
                 data: users.data.users,
-                pagination,
-                sortedInfo: null,
+                pagination
             });
         });
       }
+      searchByName = (value) => {
+        this.setState({
+         filter: value
+      });
+      const pagination = { ...this.state.pagination };
+      this.GetUsers({
+          results: pagination.defaultPageSize,
+          page: 1,
+          field: this.state.field,
+          filter: value
+      });
+      }
       componentDidMount() {
+        
         this.GetUsers({
-            results: 2,
+            results: 10,
             page: 1,
             field: this.state.field,
-            order: this.state.order,
             filter: this.state.filter
           });
       }
 
     render() {
         const {user} = this.props;
+        
         let { sortedInfo } = this.state;
         sortedInfo = sortedInfo || {};
 
@@ -95,48 +103,49 @@ class AdminPanel extends Component {
           dataIndex: 'name',
           key: 'name',
           sorter: true,
-          sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
         }, {
           title: 'Email',
           dataIndex: 'email',
           key: 'email',
           sorter: true,
-          sortOrder: sortedInfo.columnKey === 'email' && sortedInfo.order,
         }, {
           title: 'Details',
           dataIndex: 'details',
           key: 'details',
           sorter: true,
-          sortOrder: sortedInfo.columnKey === 'details' && sortedInfo.order,
         }, {
           title: 'Country',
           dataIndex: 'country',
           key: 'country',
           sorter: true,
-          sortOrder: sortedInfo.columnKey === 'country' && sortedInfo.order,
         }, {
           title: 'City',
           dataIndex: 'city',
           key: 'city',
           sorter: true,
-          sortOrder: sortedInfo.columnKey === 'city' && sortedInfo.order,
         }, {
           title: 'Address',
           dataIndex: 'address',
           key: 'address',
           sorter: true,
-          sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
         }, {
           title: 'Start Study',
           dataIndex: 'startstudy',
           key: 'startstudy',
           sorter: true,
-          sortOrder: sortedInfo.columnKey === 'startstudy' && sortedInfo.order,
         }];
         if(false) { 
           return (<div className="example"><Spin /></div>)
         }
         return(
+          <div>
+          <div>
+            <Search
+             placeholder="input search text"
+            onSearch={value => this.searchByName(value)}
+            style={{ width: 150 }}
+            />
+          </div>
             <div>
                 <Table columns={columns}
                 rowKey={record => record.registered}
@@ -145,6 +154,7 @@ class AdminPanel extends Component {
                 loading={this.state.loading}
                 onChange={this.handleTableChange}
                 />
+            </div>
             </div>
         )
     }

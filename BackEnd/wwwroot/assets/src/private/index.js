@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userService } from '../services';
 
@@ -43,7 +43,9 @@ class PrivateLayout extends Component {
         const { user } = this.props;
         const Component = this.props.component;
         const route = this.props.route;
-        const menuSelected = location.pathname;
+        const rend = (route.match.url=="/adminpanel" && !user.roles.some(x=>x=="admin"))?
+        <Redirect to="/profile"/>:<Component route={route}/>;
+        menuSelected = location.pathname;
         const adminCabinet = user.roles.some(x=>x=="admin") ? (
         <Menu.Item key="/adminpanel">
         <Link to="/adminpanel"><Icon type="idcard" />
@@ -101,7 +103,7 @@ class PrivateLayout extends Component {
                         </Header>
                         <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
                             <div>
-                                <Component route={route}/>
+                                {rend}
                             </div>
                         </Content>
                     </Layout>
