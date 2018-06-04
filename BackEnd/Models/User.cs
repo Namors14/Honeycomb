@@ -19,5 +19,7 @@ namespace BackEnd.Models
         public string Password { get; set; }
 
         public DateTime? StartStudy{ get; set; }
+
+        public byte[] UserPhoto { get; set; }
     }
 }

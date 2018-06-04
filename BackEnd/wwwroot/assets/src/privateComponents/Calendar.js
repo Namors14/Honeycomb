@@ -26,8 +26,6 @@ class Calendars extends Component {
     if(this.props.user.studyDate){
       this.setState({value : moment(this.props.user.studyDate)});
     }
-    
-
   }
 
   disabledDate = (current) => {

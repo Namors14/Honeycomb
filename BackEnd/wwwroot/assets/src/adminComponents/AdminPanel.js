@@ -28,17 +28,23 @@ class AdminPanel extends Component {
             pagination: {defaultPageSize:10, showSizeChanger:true, pageSizeOptions: ['2', '5', '10', '20']},
             loading: false,
             field: "name",
+            order: "ascend",
             filter: null,
         };
     }
 
     handleTableChange = (pagination, filters, sorter) => {
         let fields;
+        let orders;
         if(sorter.field) {
-          this.setState({ field: sorter.field });
-          fields = sorter.field
+          this.setState({ field: sorter.field,
+                          order: sorter.order
+          });
+          fields = sorter.field;
+          orders = sorter.order;
         } else {
           fields = this.state.field;
+          orders = this.state.order;
         }
         const pager = { ...this.state.pagination };
         pager.current = pagination.current;
@@ -47,6 +53,7 @@ class AdminPanel extends Component {
           results: pagination.pageSize,
           page: pagination.current,
           field: fields,
+          order: orders,
           filter: this.state.filter
         });
       }
@@ -57,7 +64,6 @@ class AdminPanel extends Component {
                 ...params,
               }
         console.log(this.state)
-        console.log(data);
         axios.post(`/api/Admin/GetUsers`, data , { headers: authHeader() })
         .then(users => {
             const pagination = { ...this.state.pagination };
@@ -79,6 +85,7 @@ class AdminPanel extends Component {
           results: pagination.defaultPageSize,
           page: 1,
           field: this.state.field,
+          order: this.state.orderr,
           filter: value
       });
       }
@@ -88,6 +95,7 @@ class AdminPanel extends Component {
             results: 10,
             page: 1,
             field: this.state.field,
+            order: this.state.order,
             filter: this.state.filter
           });
       }

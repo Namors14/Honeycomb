@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using BackEnd.App;
 using Hangfire;
+using System.IO;
 
 namespace BackEnd.Controllers
 {
@@ -30,6 +31,30 @@ namespace BackEnd.Controllers
         public class DateModel
         {
             public string date { get; set; }
+        }
+
+
+        [Authorize(Roles = "user")]
+        [HttpPost]
+        [Route("UploadImage")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+
+            using (Stream stream = file.OpenReadStream())
+            {
+                using (var binaryReader = new BinaryReader(stream))
+                {
+                    var fileContent = binaryReader.ReadBytes((int)file.Length);
+
+                    var userId = HttpContext.User.Claims.First().Value;
+
+                    var user = await _userManager.FindByIdAsync(userId);
+                    user.UserPhoto = fileContent;
+                    _context.SaveChanges();
+
+                    return Ok(new { UserPhoto = fileContent });
+                }
+            }
         }
 
         [Authorize(Roles ="user")]

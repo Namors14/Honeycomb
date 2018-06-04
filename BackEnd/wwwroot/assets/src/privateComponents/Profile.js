@@ -38,7 +38,8 @@ class Profile extends Component {
               <Card 
                   
                   hoverable
-                  cover={<img src="http://icons.iconarchive.com/icons/icons-land/vista-people/256/Person-Male-Light-icon.png" />}
+                  cover = {user.userPhoto ? <img src={"data:image/png;base64," +user.userPhoto} alt="avatar" /> :
+                  <img src="http://icons.iconarchive.com/icons/icons-land/vista-people/256/Person-Male-Light-icon.png" />}
                   >
                   </Card>
               </Col>

@@ -6,7 +6,8 @@ export const userService = {
     logout,
     GetUser,
     SetDate,
-    GetUsers
+    GetUsers,
+    UploadImage
 };
 
 function login(username, password) {
@@ -32,10 +33,27 @@ function SetDate(date) {
       console.log("here")
     return axios.post(`/api/User/SetStudyDate`, data, { headers: authHeader() })
     .then(ok => {
+        consol
         let user = JSON.parse(localStorage.getItem('user'));
         if (ok.data.success=="ok") {
             localStorage.removeItem('user');
             user.studyDate = data.date;
+            localStorage.setItem('user', JSON.stringify(user));
+        }
+        return user;
+    });
+}
+
+function UploadImage(input) {
+
+    console.log("here")
+    return axios.post(`/api/User/UploadImage`, input, { headers: authHeader() })
+    .then(ok => {
+        console.log(ok.data);
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (ok.data) {
+            localStorage.removeItem('user');
+            user.userPhoto = ok.data.userPhoto;
             localStorage.setItem('user', JSON.stringify(user));
         }
         return user;

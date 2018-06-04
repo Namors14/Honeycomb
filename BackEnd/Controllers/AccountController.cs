@@ -134,6 +134,7 @@ namespace CustomIdentityApp.Controllers
                     City = user.City,
                     Roles = roles,
                     StudyDate = (user.StartStudy==null)? null : user.StartStudy.Value.ToShortDateString(),
+                    UserPhoto = user.UserPhoto,
                     Token = token
                 });
 

@@ -45,11 +45,11 @@ class PrivateLayout extends Component {
         const route = this.props.route;
         const rend = (route.match.url=="/adminpanel" && !user.roles.some(x=>x=="admin"))?
         <Redirect to="/profile"/>:<Component route={route}/>;
-        menuSelected = location.pathname;
-        const adminCabinet = user.roles.some(x=>x=="admin") ? (
+        const menuSelected = location.pathname;
+        const adminCabinet = (user && user.roles.some(x=>x=="admin") )? (
         <Menu.Item key="/adminpanel">
-        <Link to="/adminpanel"><Icon type="idcard" />
-        <span>Admin Panel</span></Link>
+        <Link to="/adminpanel" ><Icon type="idcard" className="menu-item" />
+        <span className="menu-item">Admin Panel</span></Link>
         </Menu.Item>) : "";
         const divStyle = this.state.collapsed? {display: 'none'} : {display: 'inline'};
         return (
@@ -73,16 +73,16 @@ class PrivateLayout extends Component {
                         <Menu mode="inline" defaultSelectedKeys={[menuSelected]}>
                         {adminCabinet}
                         <Menu.Item  key="/profile">
-                        <Link to="/profile"><Icon type="user" />
-                        <span>Profile</span></Link>
+                        <Link to="/profile"> <Icon type="user" className="menu-item" />
+                        <span className="menu-item">Profile</span></Link>
                         </Menu.Item>
                         <Menu.Item key="/calendar">
-                        <Link to="/calendar"><Icon type="calendar" />
-                        <span>Calendar</span></Link>
+                        <Link to="/calendar"> <Icon type="calendar" className="menu-item" />
+                        <span className="menu-item">Calendar</span></Link>
                         </Menu.Item>
                         <Menu.Item key="/settings">
-                        <Link to="/settings"><Icon type="setting" />
-                        <span>Settings</span></Link>
+                        <Link to="/settings"> <Icon type="setting" className="menu-item" />
+                        <span className="menu-item">Settings</span></Link>
                         </Menu.Item>
                         </Menu>
                         </div>

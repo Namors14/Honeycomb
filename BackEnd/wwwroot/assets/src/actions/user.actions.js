@@ -9,7 +9,8 @@ export const userActions = {
     logout,
     GetUser,
     SetDate,
-    GetUsers
+    GetUsers,
+    UploadImage
 };
 
 function login(username, password) {
@@ -39,6 +40,26 @@ function SetDate(username, date) {
     return dispatch => {
 
         userService.SetDate(date)
+            .then(
+                user => { 
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
+    function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
+}
+
+function UploadImage(input) {
+    return dispatch => {
+
+        userService.UploadImage(input)
             .then(
                 user => { 
                     dispatch(success(user));

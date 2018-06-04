@@ -32,6 +32,8 @@ namespace BackEnd.Controllers
 
             public string field { get; set; }
 
+            public string order { get; set; }
+
             public string filter { get; set; }
         }
 
@@ -74,6 +76,10 @@ namespace BackEnd.Controllers
 
             var model = await PagingList.CreateAsync(
                                  qry, pagin.results, pagin.page, pagin.field, "name");
+            if(pagin.order == "descend")
+            {
+                model.Reverse();
+            }
 
         //    model.RouteValue = new RouteValueDictionary {
         //{ "filter", pagin.filter}
